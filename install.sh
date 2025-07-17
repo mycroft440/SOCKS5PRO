@@ -53,7 +53,7 @@ install_proxy_single_command( ) {
     echo "[INFO] Compilando o projeto Rust...\n"
     # Navega para o diretório onde o Cargo.toml está para compilar
     source /root/.cargo/env || error_exit "[ERRO] Falha ao carregar o ambiente do Cargo."
-    (cd $PROJECT_DIR/src && /root/.cargo/bin/cargo build --release ) &>/dev/null || error_exit "[ERRO] Falha ao compilar o projeto Rust.\n"
+    (cd $PROJECT_DIR/src && sudo -E /root/.cargo/bin/cargo build --release ) &>/dev/null || error_exit "[ERRO] Falha ao compilar o projeto Rust.\n"
     echo "[SUCESSO] Projeto Rust compilado.\n"
 
     # 5. Mover o executável compilado
