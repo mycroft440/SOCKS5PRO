@@ -10,7 +10,7 @@ error_exit() {
 PROJECT_DIR="/opt/rusty_socks_proxy"
 
 # URL base para download dos arquivos do projeto no GitHub
-GITHUB_RAW_URL="https://raw.githubusercontent.com/mycroft440/SOCKS5/main/socks5pro"
+GITHUB_RAW_URL="https://raw.githubusercontent.com/mycroft440/SOCKS5PRO/main/socks5pro"
 
 # Função para instalar o proxy
 install_proxy_single_command() {
