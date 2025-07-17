@@ -9,6 +9,7 @@ use tokio::io::BufReader;
 use log::{info, error};
 use std::env;
 use tokio::time::{timeout, Duration};
+use socket2::{SockRef, TcpKeepalive};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -85,7 +86,8 @@ async fn handle_client(mut socket: TcpStream) -> Result<(), Box<dyn std::error::
 
     // Apply keepalive to client socket
     if keepalive_interval > 0 {
-        if let Err(e) = socket.set_keepalive(Some(Duration::from_secs(keepalive_interval))) {
+        let keepalive = TcpKeepalive::new().with_time(Duration::from_secs(keepalive_interval));
+        if let Err(e) = SockRef::from(&socket).set_tcp_keepalive(&keepalive) {
             error!("Falha ao configurar keepalive para o socket do cliente: {}", e);
         }
     }
@@ -279,7 +281,8 @@ async fn handle_client(mut socket: TcpStream) -> Result<(), Box<dyn std::error::
 
     // Apply keepalive to destination socket
     if keepalive_interval > 0 {
-        if let Err(e) = destination.set_keepalive(Some(Duration::from_secs(keepalive_interval))) {
+        let keepalive = TcpKeepalive::new().with_time(Duration::from_secs(keepalive_interval));
+        if let Err(e) = SockRef::from(&destination).set_tcp_keepalive(&keepalive) {
             error!("Falha ao configurar keepalive para o socket de destino: {}", e);
         }
     }
@@ -300,5 +303,3 @@ async fn handle_client(mut socket: TcpStream) -> Result<(), Box<dyn std::error::
 
     Ok(())
 }
-
-
