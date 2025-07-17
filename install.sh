@@ -124,4 +124,4 @@ main_menu() {
 }
 
 # Inicia o menu principal
-main_menu
+main_menup
