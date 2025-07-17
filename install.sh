@@ -33,7 +33,7 @@ install_proxy_single_command( ) {
     # 2. Instalar build-essential
     echo "[INFO] Atualizando pacotes e instalando build-essential...\n"
     sudo apt update >&/dev/null || error_exit "[ERRO] Falha ao atualizar pacotes.\n"
-    sudo apt install build-essential -y &>/dev/null || error_exit "[ERRO] Falha ao instalar build-essential.\n"
+    sudo apt install build-essential -y || error_exit "[ERRO] Falha ao instalar build-essential.\n"
     echo "[SUCESSO] build-essential instalado.\n"
 
     # 3. Mover arquivos do projeto para um diretório padrão
