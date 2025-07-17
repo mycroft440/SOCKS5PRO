@@ -13,4 +13,6 @@ log = "0.4"
 env_logger = "0.11"
 futures = "0.3"
 
-
+[[bin]]
+name = "rusty_socks_proxy"
+path = "main.rs"
