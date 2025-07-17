@@ -13,7 +13,7 @@ PROJECT_DIR="/opt/rusty_socks_proxy"
 GITHUB_RAW_URL="https://raw.githubusercontent.com/mycroft440/SOCKS5PRO/main/"
 
 # Função para instalar o proxy
-install_proxy_single_command() {
+install_proxy_single_command( ) {
     clear
     echo "\n--- Instalar Rusty SOCKS5 Proxy ---"
     echo "[INFO] Iniciando a instalação do Rusty SOCKS5 Proxy...\n"
@@ -23,6 +23,7 @@ install_proxy_single_command() {
     if ! command -v cargo &>/dev/null; then
         curl --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y || error_exit "[ERRO] Falha ao instalar Rust.\n"
         # O rustup já configura o PATH, mas para garantir que esteja disponível imediatamente
+        export PATH="/root/.cargo/bin:$PATH"
         source $HOME/.cargo/env || source /root/.cargo/env || echo "[AVISO] Não foi possível carregar o ambiente do Cargo. Verifique manualmente." 
         echo "[SUCESSO] Rust e Cargo instalados.\n"
     else
@@ -51,7 +52,7 @@ install_proxy_single_command() {
     # 4. Compilar o projeto Rust
     echo "[INFO] Compilando o projeto Rust...\n"
     # Navega para o diretório onde o Cargo.toml está para compilar
-    (cd $PROJECT_DIR/src && cargo build --release) &>/dev/null || error_exit "[ERRO] Falha ao compilar o projeto Rust.\n"
+    (cd $PROJECT_DIR/src && cargo build --release ) &>/dev/null || error_exit "[ERRO] Falha ao compilar o projeto Rust.\n"
     echo "[SUCESSO] Projeto Rust compilado.\n"
 
     # 5. Mover o executável compilado
@@ -123,5 +124,3 @@ main_menu() {
 
 # Inicia o menu principal
 main_menu
-
-
