@@ -241,3 +241,4 @@ async fn handle_client(mut socket: TcpStream) -> Result<(), Box<dyn std::error::
 
     Ok(())
 }
+
