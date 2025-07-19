@@ -10,6 +10,7 @@ use log::{info, error};
 use std::env;
 use tokio::time::Duration;
 use socket2::{SockRef, TcpKeepalive};
+use tokio::io::copy;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -179,7 +180,7 @@ async fn handle_client(mut socket: TcpStream) -> Result<(), Box<dyn std::error::
         return Err(Box::new(Error::new(ErrorKind::Other, "Comando SOCKS5 não suportado")));
     }
 
-    let (_host, _port) = match atyp {
+    let (host, port) = match atyp {
         0x01 => { // IPv4
             if buf.len() < 4 {
                 socket.write_all(&[0x05, 0x01, 0x00, 0x01, 0, 0, 0, 0, 0, 0]).await?;
@@ -221,6 +222,22 @@ async fn handle_client(mut socket: TcpStream) -> Result<(), Box<dyn std::error::
             return Err(Box::new(Error::new(ErrorKind::InvalidData, "Tipo de endereço SOCKS5 não suportado")));
         }
     };
+
+    info!("Conectando a {}:{}", host, port);
+    let mut outbound = TcpStream::connect(format!("{}:{}", host, port)).await?;
+    info!("Conectado a {}:{}", host, port);
+
+    // Resposta SOCKS5 de sucesso
+    socket.write_all(&[0x05, 0x00, 0x00, 0x01, 0, 0, 0, 0, 0, 0]).await?;
+
+    // Encaminhamento de dados
+    let (mut ri, mut wi) = socket.split();
+    let (mut ro, mut wo) = outbound.split();
+
+    let client_to_server = copy(&mut ri, &mut wo);
+    let server_to_client = copy(&mut ro, &mut wi);
+
+    tokio::try_join!(client_to_server, server_to_client)?;
 
     Ok(())
 }
