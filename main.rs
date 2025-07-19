@@ -61,7 +61,6 @@ async fn load_users() -> Result<HashMap<String, String>, Error> {
     Ok(users)
 }
 
-
 async fn handle_client(mut socket: TcpStream) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let users = load_users().await?;
 
@@ -223,7 +222,5 @@ async fn handle_client(mut socket: TcpStream) -> Result<(), Box<dyn std::error::
         }
     };
 
-
-
-
-
+    Ok(())
+}
